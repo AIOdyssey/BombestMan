@@ -78,7 +78,7 @@ public class Tile {
             return bombers.get(0).getBomberNumber() + "";
         }
         else if (bomb != null) {
-            return "b"; //bomb.toString();
+            return "b";
         }
         else return type.toString();
     }

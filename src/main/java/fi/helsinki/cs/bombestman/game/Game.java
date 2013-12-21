@@ -24,8 +24,8 @@ public class Game {
     public static final int TURNS = 20;
     public static final double TREASURE_CHANGE = 1;
     public static final int INITIAL_COUNT_OF_BOMBS = 3;
-    
-    public static final int PORT_NO = 51291;
+
+    public static int PORT_NO;// = 51291;
 
     /*
      * We just are evil and throw exceptions if necessary...
@@ -34,7 +34,8 @@ public class Game {
      */
     public static void main(final String[] args) throws IOException, InterruptedException {
 
-        bombersCount = args.length;
+        bombersCount = args.length - 1;
+        PORT_NO = Integer.parseInt(args[args.length-1]);
         IBomber[] bombers = new IBomber[bombersCount];
 
         // File located to the root folder of this project.
@@ -45,26 +46,26 @@ public class Game {
         createBombers(bombers, m, args);
         m.run();
         // LET'S PLAY
-        
+
         System.out.println("Shall the game begin");
         do {
+            String status = m.getStatus();
+            System.out.print(status);
             for (IBomber iBomber : bombers) {
-                iBomber.sayToBomberman(m.getStatus());
+                iBomber.sayToBomberman(status);
             }
             System.out.println("Status updated");
             Thread.sleep(1000);
         } while (!m.passRound());
 
+        System.out.println(m.getStatus());
         // KILL ALL PLAYERS
         for (IBomber iBomber : bombers) {
             iBomber.destroy();
         }
+        System.out.println("DONE");
     }
 
-    
-    
-    
-    
     private static void createBombers(IBomber[] bombers, Match m, String[] args) throws IOException {
         for (int i = 0; i < bombersCount; i++) {
             String aiLocation = args[i];
@@ -78,5 +79,5 @@ public class Game {
         return new Match(bombers, mapFile, POINTS_PER_TREASURE, POINTS_LOST_FOR_DYING,
                 DYING_COOL_DOWN, BOMB_TIMER_DICE, BOMB_TIMER_SIDES, BOMB_FORCE, TURNS,
                 TREASURE_CHANGE, PORT_NO);
-    }  
+    }
 }

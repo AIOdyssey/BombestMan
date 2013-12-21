@@ -29,7 +29,10 @@ public class Bomber implements IBomber {
         this.bombs = bombs;
         this.match = match;
         this.cooldown = 0;
-        this.commandLocation = projectFolder + "/run.sh";
+        if (!projectFolder.endsWith("/")) {
+            projectFolder += "/";
+        }
+        this.commandLocation = projectFolder + "run.sh";
         chooseStartingTile(match, number);
 
     }
