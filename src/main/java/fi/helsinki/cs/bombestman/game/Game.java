@@ -57,7 +57,7 @@ public class Game {
 //         File mapFile = new File("map1.txt");
         File mapFile = File.createTempFile("map", "txt");
         FileWriter fw = new FileWriter(mapFile);
-        fw.write("15 15\n");
+        fw.write("11 11\n");
         fw.append(map);
         fw.append("\n");
         fw.flush();
