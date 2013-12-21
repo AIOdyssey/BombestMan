@@ -12,6 +12,7 @@ import fi.helsinki.cs.processRunner.ProcessBotFactory;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Scanner;
 
 public class Game {
 
@@ -60,17 +61,15 @@ public class Game {
 //         File mapFile = new File("map1.txt");
         File mapFile = File.createTempFile("map", "txt");
         FileWriter fw = new FileWriter(mapFile);
-        fw.write("15 15");
+        fw.write("15 15\n");
         fw.append(map);
         fw.append("\n");
         fw.flush();
         fw.close();
-        
         try {
 
             Match m = createMatch(bombers, mapFile);
             m.parseMap();
-
             createBombers(bombers, m, args);
             m.run();
 
