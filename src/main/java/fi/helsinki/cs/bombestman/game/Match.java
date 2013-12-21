@@ -9,8 +9,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * A single game of Bombestman
@@ -161,8 +159,8 @@ public class Match implements Runnable {
             }
             buf.append('\n');
         }
-        for (int i = 0; i < bombers.length; i++) {
-            buf.append(bombers[i].toString()).append('\n');
+        for (IBomber bomber : bombers) {
+            buf.append(bomber.toString()).append('\n');
         }
         for (Bomb b : collectBombs()) {
             buf.append(b.toString()).append('\n');
@@ -192,9 +190,9 @@ public class Match implements Runnable {
 
     protected String getMapString() {
         StringBuilder buf = new StringBuilder();
-        for (int i = 0; i < map.length; i++) {
+        for (Tile[] map1 : map) {
             for (int j = 0; j < map.length; j++) {
-                buf.append(map[i][j].toString());
+                buf.append(map1[j].toString());
             }
             buf.append('\n');
         }
@@ -234,7 +232,8 @@ public class Match implements Runnable {
                 }
             }
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(Match.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("File not found");
+            throw new RuntimeException("cannot continue without map");
         } finally {
             if (read != null) {
                 read.close();
@@ -278,8 +277,8 @@ public class Match implements Runnable {
     public void waitForConnections(int port) {
         try {
             ServerSocket socket = new ServerSocket(port);
-            for(int i = 0; i < bombers.length; i++) {
-                bombers[i].setSocket(socket.accept());
+            for (IBomber bomber : bombers) {
+                bomber.setSocket(socket.accept());
             }
         } catch (IOException ex) {
             System.out.println(ex.toString());

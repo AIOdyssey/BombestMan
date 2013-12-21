@@ -10,9 +10,8 @@ import static fi.helsinki.cs.bombestman.game.Game.TREASURE_CHANGE;
 import static fi.helsinki.cs.bombestman.game.Game.TURNS;
 import fi.helsinki.cs.processRunner.ProcessBotFactory;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class Game {
 
@@ -34,16 +33,41 @@ public class Game {
      *
      * @throws IOException
      */
-    public static void main(final String[] args) {
+    public static void main(final String[] args) throws IOException {
 
         bombersCount = args.length - 1;
         PORT_NO = Integer.parseInt(args[args.length - 1]);
         IBomber[] bombers = new IBomber[bombersCount];
 
-        // File located to the root folder of this project.
-        File mapFile = new File("map1.txt");
+        String map
+                = "...?????????...\n"
+                + ".#.#?#?#?#?#.#.\n"
+                + "..???????????..\n"
+                + "?#?#?#?#?#?#?#?\n"
+                + "???????????????\n"
+                + "?#?#?#?#?#?#?#?\n"
+                + "??????.$.??????\n"
+                + "?#?#?#$$$#?#?#?\n"
+                + "??????.$.??????\n"
+                + "?#?#?#?#?#?#?#?\n"
+                + "???????????????\n"
+                + "?#?#?#?#?#?#?#?\n"
+                + "..???????????..\n"
+                + ".#.#?#?#?#?#?#.\n"
+                + "...?????????...";
 
+        // File located to the root folder of this project.
+//         File mapFile = new File("map1.txt");
+        File mapFile = File.createTempFile("map", "txt");
+        FileWriter fw = new FileWriter(mapFile);
+        fw.write("15 15");
+        fw.append(map);
+        fw.append("\n");
+        fw.flush();
+        fw.close();
+        
         try {
+
             Match m = createMatch(bombers, mapFile);
             m.parseMap();
 
@@ -82,12 +106,13 @@ public class Game {
             System.out.println(m.getStatus());
 
             sendToAllBots(bombers, "THE END\n");
-            
+
         } catch (InterruptedException ex) {
             System.out.println("interrupted" + ex);
         } catch (IOException ex) {
             System.out.println("exception" + ex);
         } finally {
+            System.out.println("Starting to kill bombers");
             killBombers(bombers);
             System.out.println("DONE");
         }
