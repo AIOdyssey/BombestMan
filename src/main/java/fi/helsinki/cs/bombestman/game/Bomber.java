@@ -96,6 +96,10 @@ public class Bomber implements IBomber {
 
     @Override
     public void move(Direction dir) {
+        if (tile == null) {
+            throw new RuntimeException("Tile cannot be null");
+        }
+        
         Tile target = match.getTile(tile.y + dir.getY(), tile.x + dir.getX());
         if (target != null && target.passable()) {
             tile.moveBomber(this, target);
@@ -129,6 +133,9 @@ public class Bomber implements IBomber {
 
     @Override
     public boolean canBomb() {
+        if (tile == null) {
+            return bombs > 0;
+        }
         return bombs > 0 && tile.passable();
     }
 
