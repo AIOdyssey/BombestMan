@@ -11,6 +11,8 @@ import static fi.helsinki.cs.bombestman.game.Game.TURNS;
 import fi.helsinki.cs.processRunner.ProcessBotFactory;
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Game {
 
@@ -32,38 +34,52 @@ public class Game {
      *
      * @throws IOException
      */
-    public static void main(final String[] args) throws IOException, InterruptedException {
+    public static void main(final String[] args) {
 
         bombersCount = args.length - 1;
-        PORT_NO = Integer.parseInt(args[args.length-1]);
+        PORT_NO = Integer.parseInt(args[args.length - 1]);
         IBomber[] bombers = new IBomber[bombersCount];
 
         // File located to the root folder of this project.
         File mapFile = new File("map1.txt");
 
-        Match m = createMatch(bombers, mapFile);
-        m.parseMap();
-        createBombers(bombers, m, args);
-        m.run();
-        // LET'S PLAY
+        try {
+            Match m = createMatch(bombers, mapFile);
+            m.parseMap();
 
-        System.out.println("Shall the game begin");
-        do {
-            String status = m.getStatus();
-            System.out.print(status);
-            for (IBomber iBomber : bombers) {
-                iBomber.sayToBomberman(status);
-            }
-            System.out.println("Status updated");
-            Thread.sleep(1000);
-        } while (!m.passRound());
+            createBombers(bombers, m, args);
+            m.run();
+            // LET'S PLAY
 
-        System.out.println(m.getStatus());
-        // KILL ALL PLAYERS
+            System.out.println("Shall the game begin");
+
+            do {
+                String status = m.getStatus();
+                System.out.print(status);
+                for (IBomber iBomber : bombers) {
+                    iBomber.sayToBomberman(status);
+                }
+                System.out.println("Status updated");
+
+                Thread.sleep(1000);
+
+            } while (!m.passRound());
+            System.out.println(m.getStatus());
+
+        } catch (InterruptedException ex) {
+            System.out.println("interrupted" + ex);
+        } catch (IOException ex) {
+            System.out.println("exception" + ex);
+        } finally {
+            killBombers(bombers);
+            System.out.println("DONE");
+        }
+    }
+
+    private static void killBombers(IBomber[] bombers) {
         for (IBomber iBomber : bombers) {
             iBomber.destroy();
         }
-        System.out.println("DONE");
     }
 
     private static void createBombers(IBomber[] bombers, Match m, String[] args) throws IOException {
