@@ -57,8 +57,16 @@ public class Match implements Runnable {
         this.port = port;
     }
 
+    public int getMapWidth(){
+        return this.map[0].length;
+    }
+    
+    public int getMapHeight(){
+        return this.map.length;
+    }
+    
     public boolean passRound() throws IOException {
-        System.out.println("Getting commands");
+//        System.out.println("Getting commands");
         String[] commands = getCommands();
         //execute move commands
         for (int i = 0; i < commands.length; i++) {
@@ -70,7 +78,7 @@ public class Match implements Runnable {
                 }
             }
         }
-        System.out.println("moved around");
+//        System.out.println("moved around");
 
         giveTreasurePoints();
         //execute bomb commands

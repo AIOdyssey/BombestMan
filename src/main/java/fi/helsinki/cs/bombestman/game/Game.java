@@ -16,7 +16,7 @@ import java.util.logging.Logger;
 
 public class Game {
 
-    public static int bombersCount = 2;
+    public static int bombersCount;
     public static final int POINTS_PER_TREASURE = 3;
     public static final int POINTS_LOST_FOR_DYING = 3;
     public static final int DYING_COOL_DOWN = 5;
@@ -49,23 +49,40 @@ public class Game {
 
             createBombers(bombers, m, args);
             m.run();
+
+            // Lets give initial details to bombers:
+            String initialMessage = "BEGIN MSG\n"
+                    + "map width: " + m.getMapWidth() + "\n"
+                    + "map height: " + m.getMapHeight() + "\n"
+                    + "bombersCount " + bombersCount + "\n"
+                    + "POINTS_PER_TREASURE " + POINTS_PER_TREASURE + "\n"
+                    + "POINTS_LOST_FOR_DYING " + POINTS_LOST_FOR_DYING + "\n"
+                    + "DYING_COOL_DOWN " + DYING_COOL_DOWN + "\n"
+                    + "BOMB_TIMER_DICE " + BOMB_TIMER_DICE + "\n"
+                    + "BOMB_TIMER_SIDES " + BOMB_TIMER_SIDES + "\n"
+                    + "BOMB_FORCE " + BOMB_FORCE + "\n"
+                    + "TURNS " + TURNS + "\n"
+                    + "TREASURE_CHANGE " + TREASURE_CHANGE + "\n"
+                    + "INITIAL_COUNT_OF_BOMBS " + INITIAL_COUNT_OF_BOMBS + "\n"
+                    + "MAP: \n"
+                    + m.getMapString()
+                    + "END MSG\n\n";
+            sendToAllBots(bombers, initialMessage);
+
             // LET'S PLAY
-
-            System.out.println("Shall the game begin");
-
+//            System.out.println("Shall the game begin");
             do {
                 String status = m.getStatus();
                 System.out.print(status);
-                for (IBomber iBomber : bombers) {
-                    iBomber.sayToBomberman(status);
-                }
-                System.out.println("Status updated");
+                sendToAllBots(bombers, status);
 
                 Thread.sleep(1000);
 
             } while (!m.passRound());
             System.out.println(m.getStatus());
 
+            sendToAllBots(bombers, "THE END\n");
+            
         } catch (InterruptedException ex) {
             System.out.println("interrupted" + ex);
         } catch (IOException ex) {
@@ -74,6 +91,13 @@ public class Game {
             killBombers(bombers);
             System.out.println("DONE");
         }
+    }
+
+    private static void sendToAllBots(IBomber[] bombers, String status) throws IOException {
+        for (IBomber iBomber : bombers) {
+            iBomber.sayToBomberman(status);
+        }
+        System.out.print(status);
     }
 
     private static void killBombers(IBomber[] bombers) {
