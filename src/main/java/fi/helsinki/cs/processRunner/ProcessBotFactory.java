@@ -15,7 +15,7 @@ import java.util.Map;
 public class ProcessBotFactory {
 
     public static IBomber buildBomber(int number, int bombs, Match match, String projectFolder) throws IOException {
-        ProcessBuilder pb = new ProcessBuilder(projectFolder + "/run.sh", Integer.toString(Game.PORT_NO));
+        ProcessBuilder pb = new ProcessBuilder(projectFolder + "/run.sh", Integer.toString(number), Integer.toString(Game.PORT_NO));
 
         Map<String, String> env = pb.environment();
         env.put("PATH", System.getenv("PATH"));
