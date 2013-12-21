@@ -23,7 +23,7 @@ public class Game {
     public static final int BOMB_TIMER_DICE = 1;
     public static final int BOMB_TIMER_SIDES = 3;
     public static final int BOMB_FORCE = 3;
-    public static final int TURNS = 20;
+    public static final int TURNS = 30;
     public static final double TREASURE_CHANGE = 1;
     public static final int INITIAL_COUNT_OF_BOMBS = 3;
 
