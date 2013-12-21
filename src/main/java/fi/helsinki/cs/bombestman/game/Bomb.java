@@ -34,6 +34,7 @@ public class Bomb {
     
     @Override
     public String toString() {
-        return "bomb at " + tile.x + "," + tile.y;
+        return "bomb at " + tile.x + "," + tile.y + " (owned by " + 
+                owner.getBomberNumber() + ")";
     }
 }
