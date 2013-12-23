@@ -17,17 +17,17 @@ import java.util.Scanner;
 
 public class Game {
 
-    public static int bombersCount;
     public static final int POINTS_PER_TREASURE = 1;
     public static final int POINTS_LOST_FOR_DYING = 3;
-    public static final int DYING_COOL_DOWN = 10;
-    public static final int BOMB_TIMER_DICE = 4;
+    public static final int DYING_COOL_DOWN = 8;
+    public static final int BOMB_TIMER_DICE = 3;
     public static final int BOMB_TIMER_SIDES = 3;
-    public static final int BOMB_FORCE = 4;
+    public static final int BOMB_FORCE = 3;
     public static final int TURNS = 200;
     public static final double TREASURE_CHANCE = 0.2;
-    public static final int INITIAL_COUNT_OF_BOMBS = 2;
+    public static final int INITIAL_COUNT_OF_BOMBS = 3;
 
+    public static int bombersCount;
     public static int PORT_NO;// = 51291;
 
     /*
@@ -40,54 +40,14 @@ public class Game {
         bombersCount = args.length - 1;
         PORT_NO = Integer.parseInt(args[args.length - 1]);
         IBomber[] bombers = new IBomber[bombersCount];
-
-        String map
-                = "...?????...\n"
-                + ".#.#?#?#.#.\n"
-                + "..???????..\n"
-                + "?#?#?#?#?#?\n"
-                + "????.$.????\n"
-                + "?#?#$$$#?#?\n"
-                + "????.$.????\n"
-                + "?#?#?#?#?#?\n"
-                + "..???????..\n"
-                + ".#.#?#?#.#.\n"
-                + "...?????...";
-
-        // File located to the root folder of this project.
-//         File mapFile = new File("map1.txt");
-        File mapFile = File.createTempFile("map", "txt");
-        FileWriter fw = new FileWriter(mapFile);
-        fw.write("11 11\n");
-        fw.append(map);
-        fw.append("\n");
-        fw.flush();
-        fw.close();
+        File mapFile = initMap();
         try {
 
             Match m = createMatch(bombers, mapFile);
             m.parseMap();
             createBombers(bombers, m, args);
             m.run();
-
-            // Lets give initial details to bombers:
-            String initialMessage = "BEGIN MSG\n"
-                    + "map width: " + m.getMapWidth() + "\n"
-                    + "map height: " + m.getMapHeight() + "\n"
-                    + "bombersCount " + bombersCount + "\n"
-                    + "POINTS_PER_TREASURE " + POINTS_PER_TREASURE + "\n"
-                    + "POINTS_LOST_FOR_DYING " + POINTS_LOST_FOR_DYING + "\n"
-                    + "DYING_COOL_DOWN " + DYING_COOL_DOWN + "\n"
-                    + "BOMB_TIMER_DICE " + BOMB_TIMER_DICE + "\n"
-                    + "BOMB_TIMER_SIDES " + BOMB_TIMER_SIDES + "\n"
-                    + "BOMB_FORCE " + BOMB_FORCE + "\n"
-                    + "TURNS " + TURNS + "\n"
-                    + "TREASURE_CHANGE " + TREASURE_CHANCE + "\n"
-                    + "INITIAL_COUNT_OF_BOMBS " + INITIAL_COUNT_OF_BOMBS + "\n"
-                    + "MAP: \n"
-                    + m.getMapString()
-                    + "END MSG\n\n";
-            sendToAllBots(bombers, initialMessage);
+            createAndSendInitialMessageToAllBots(m, bombers);
 
             // LET'S PLAY
 //            System.out.println("Shall the game begin");
@@ -112,6 +72,52 @@ public class Game {
             killBombers(bombers);
             System.out.println("DONE");
         }
+    }
+
+    private static void createAndSendInitialMessageToAllBots(Match m, IBomber[] bombers) throws IOException {
+        // Lets give initial details to bombers:
+        String initialMessage = "BEGIN MSG\n"
+                + "map width: " + m.getMapWidth() + "\n"
+                + "map height: " + m.getMapHeight() + "\n"
+                + "bombersCount " + bombersCount + "\n"
+                + "POINTS_PER_TREASURE " + POINTS_PER_TREASURE + "\n"
+                + "POINTS_LOST_FOR_DYING " + POINTS_LOST_FOR_DYING + "\n"
+                + "DYING_COOL_DOWN " + DYING_COOL_DOWN + "\n"
+                + "BOMB_TIMER_DICE " + BOMB_TIMER_DICE + "\n"
+                + "BOMB_TIMER_SIDES " + BOMB_TIMER_SIDES + "\n"
+                + "BOMB_FORCE " + BOMB_FORCE + "\n"
+                + "TURNS " + TURNS + "\n"
+                + "TREASURE_CHANGE " + TREASURE_CHANCE + "\n"
+                + "INITIAL_COUNT_OF_BOMBS " + INITIAL_COUNT_OF_BOMBS + "\n"
+                + "MAP: \n"
+                + m.getMapString()
+                + "END MSG\n\n";
+        sendToAllBots(bombers, initialMessage);
+    }
+
+    private static File initMap() throws IOException {
+        String map
+                = "...?????...\n"
+                + ".#.#?#?#.#.\n"
+                + "..???????..\n"
+                + "?#?#?#?#?#?\n"
+                + "????.$.????\n"
+                + "?#?#$$$#?#?\n"
+                + "????.$.????\n"
+                + "?#?#?#?#?#?\n"
+                + "..???????..\n"
+                + ".#.#?#?#.#.\n"
+                + "...?????...";
+        // File located to the root folder of this project.
+//         File mapFile = new File("map1.txt");
+        File mapFile = File.createTempFile("map", "txt");
+        FileWriter fw = new FileWriter(mapFile);
+        fw.write("11 11\n");
+        fw.append(map);
+        fw.append("\n");
+        fw.flush();
+        fw.close();
+        return mapFile;
     }
 
     private static void sendToAllBots(IBomber[] bombers, String status) throws IOException {

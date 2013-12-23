@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class Bomber implements IBomber {
 
@@ -89,6 +87,7 @@ public class Bomber implements IBomber {
         bombs++;
     }
 
+    @Override
     public void setStartingPosition(Tile t) {
         this.startingPosition = t;
     }
@@ -167,14 +166,17 @@ public class Bomber implements IBomber {
                 + points + " points";
     }
 
+    @Override
     public int getBomberNumber() {
         return this.number;
     }
 
+    @Override
     public Socket getSocket() {
         return socket;
     }
 
+    @Override
     public void setSocket(Socket socket) {
         this.socket = socket;
         try {
