@@ -12,6 +12,7 @@ import fi.helsinki.cs.processRunner.ProcessBotFactory;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.ServerSocket;
 import java.util.Scanner;
 
 public class Game {
@@ -50,7 +51,7 @@ public class Game {
                 + "????.$.????\n"
                 + "?#?#?#?#?#?\n"
                 + "..???????..\n"
-                + ".#.#?#?#?#.\n"
+                + ".#.#?#?#.#.\n"
                 + "...?????...";
 
         // File located to the root folder of this project.
@@ -127,9 +128,11 @@ public class Game {
     }
 
     private static void createBombers(IBomber[] bombers, Match m, String[] args) throws IOException {
+        ServerSocket socket = new ServerSocket(PORT_NO);
         for (int i = 0; i < bombersCount; i++) {
             String aiLocation = args[i];
             bombers[i] = ProcessBotFactory.buildBomber(i, INITIAL_COUNT_OF_BOMBS, m, aiLocation);
+            bombers[i].setSocket(socket.accept());
             // In case one wants to play this interactively....
             // bombers[i] = new MyBomber(i, INITIAL_COUNT_OF_BOMBS, m);
         }
