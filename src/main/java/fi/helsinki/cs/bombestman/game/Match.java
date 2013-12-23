@@ -3,7 +3,6 @@ package fi.helsinki.cs.bombestman.game;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -273,20 +272,9 @@ public class Match implements Runnable {
         }        
         return bombs;
     }
-    
-    public void waitForConnections(int port) {
-        try {
-            ServerSocket socket = new ServerSocket(port);
-            for (IBomber bomber : bombers) {
-                bomber.setSocket(socket.accept());
-            }
-        } catch (IOException ex) {
-            System.out.println(ex.toString());
-        }
-    }
-    
-    public void run() {
-        waitForConnections(port);
+
+    public void run()
+    {
     }
 }
 
