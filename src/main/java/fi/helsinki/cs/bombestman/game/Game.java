@@ -50,7 +50,7 @@ public class Game {
                 + "????.$.????\n"
                 + "?#?#?#?#?#?\n"
                 + "..???????..\n"
-                + ".#.#?#?#?#.\n"
+                + ".#.#?#?#.#.\n"
                 + "...?????...";
 
         // File located to the root folder of this project.
