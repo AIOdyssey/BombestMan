@@ -35,6 +35,15 @@ public class Game {
      * @throws IOException
      */
     public static void main(final String[] args) throws IOException {
+        
+        Runtime.getRuntime().addShutdownHook(new Thread()
+        {
+            @Override
+            public void run()
+            {
+                System.out.println("Shutdown hook ran!");
+            }
+        });
 
         bombersCount = args.length - 1;
         PORT_NO = Integer.parseInt(args[args.length - 1]);

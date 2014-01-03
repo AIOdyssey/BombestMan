@@ -4,12 +4,8 @@ import fi.helsinki.cs.bombestman.game.Bomber;
 import fi.helsinki.cs.bombestman.game.Game;
 import fi.helsinki.cs.bombestman.game.IBomber;
 import fi.helsinki.cs.bombestman.game.Match;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.util.Map;
 
 public class ProcessBotFactory {
