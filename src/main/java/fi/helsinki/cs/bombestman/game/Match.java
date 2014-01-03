@@ -27,15 +27,14 @@ public class Match implements Runnable {
     final int bombTimerSides;
     final int bombForce;
     final double treasureChance;
-    private File mapFile;
+    private final File mapFile;
     int turns;
-    
+
     //public ServerSocket socket;
     final int port;
-    
 
     //keeping this as internal state for less garbage
-    private Set<Tile> explodedTiles = new HashSet<Tile>();
+    private final Set<Tile> explodedTiles = new HashSet<Tile>();
 
     public Match(IBomber[] bombers, File mapFile, int pointsPerTreasure,
             int pointsLostForDying, int dyingCooldown, int bombTimerDice,
@@ -54,20 +53,26 @@ public class Match implements Runnable {
         this.port = port;
     }
 
-    public int getMapWidth(){
+    public int getMapWidth() {
         return this.map[0].length;
     }
-    
-    public int getMapHeight(){
+
+    public int getMapHeight() {
         return this.map.length;
     }
-    
+
     public boolean passRound() throws IOException {
 //        System.out.println("Getting commands");
         String[] commands = getCommands();
         //execute move commands
         for (int i = 0; i < commands.length; i++) {
+            if (commands[i] == null) {
+                System.out.println("command is null");
+                continue;
+            }
+
             String[] parsed = commands[i].split(" ");
+
             if (parsed.length >= 2 && parsed[0].equalsIgnoreCase("move")) {
                 Direction dir = Direction.getDir(parsed[1]);
                 if (dir != null) {
@@ -75,7 +80,6 @@ public class Match implements Runnable {
                 }
             }
         }
-//        System.out.println("moved around");
 
         giveTreasurePoints();
         //execute bomb commands
@@ -178,8 +182,8 @@ public class Match implements Runnable {
             return map[y][x];
         }
     }
-    
-    public Tile[][] getTiles(){
+
+    public Tile[][] getTiles() {
         return this.map;
     }
 
@@ -243,7 +247,7 @@ public class Match implements Runnable {
 
     private void giveTreasurePoints() {
         for (int i = 0; i < bombers.length; i++) {
-            if(bombers[i].getTile() != null) {
+            if (bombers[i].getTile() != null) {
                 bombers[i].getTile().collectTreasure();
             }
         }
@@ -258,24 +262,21 @@ public class Match implements Runnable {
         return result;
 
     }
-    
-    
-    public List<Bomb> collectBombs(){
+
+    public List<Bomb> collectBombs() {
         List<Bomb> bombs = new ArrayList<Bomb>();
         for (Tile[] tiles : this.map) {
             for (int i = 0; i < tiles.length; i++) {
                 Tile tile = tiles[i];
-                if (tile.getBomb() != null){
+                if (tile.getBomb() != null) {
                     bombs.add(tile.getBomb());
-                }       
+                }
             }
-        }        
+        }
         return bombs;
     }
 
-    public void run()
-    {
+    @Override
+    public void run() {
     }
 }
-
-

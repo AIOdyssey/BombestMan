@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.ArrayList;
 
 public class Bomber implements IBomber {
 
@@ -48,8 +49,24 @@ public class Bomber implements IBomber {
     }
 
     @Override
-    public String readFromBomberman() throws IOException {
-        return reader.readLine();
+    public String readFromBomberman() {
+        ArrayList<IOException> errors = new ArrayList<IOException>();
+        int TRY_TIMES = 1000;
+        for (int i = 0; i < TRY_TIMES; i++) {
+            try {
+                String msg = reader.readLine();
+                return msg;
+            } catch (IOException e){
+                System.out.println("DBG: retrying");
+                errors.add(e);
+            }
+        }
+        
+        
+        
+        return null;
+        
+        
     }
 
     private void chooseStartingTile(Match match, int number) throws RuntimeException {
