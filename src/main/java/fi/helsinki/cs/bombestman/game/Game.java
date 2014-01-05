@@ -12,6 +12,7 @@ import fi.helsinki.cs.processRunner.ProcessBotFactory;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.net.ServerSocket;
 
 public class Game {
@@ -34,8 +35,11 @@ public class Game {
      *
      * @throws IOException
      */
-    public static void main(final String[] args) throws IOException {
-        
+    public static void main(final String[] args) {
+        PrintStream origErr = System.err;
+        PrintStream origOut = System.out;
+        System.setErr(origOut);
+
         Runtime.getRuntime().addShutdownHook(new Thread()
         {
             @Override
@@ -48,9 +52,9 @@ public class Game {
         bombersCount = args.length - 1;
         PORT_NO = Integer.parseInt(args[args.length - 1]);
         IBomber[] bombers = new IBomber[bombersCount];
-        File mapFile = initMap();
+        
         try {
-
+            File mapFile = initMap();
             Match m = createMatch(bombers, mapFile);
             m.parseMap();
             createBombers(bombers, m, args);
@@ -72,9 +76,9 @@ public class Game {
             sendToAllBots(bombers, "THE END\n");
 
         } catch (InterruptedException ex) {
-            System.out.println("interrupted" + ex);
+            System.out.println("DBG: interrupted" + ex);
         } catch (IOException ex) {
-            System.out.println("exception" + ex);
+            System.out.println("DBG: exception" + ex);
         } finally {
             System.out.println("Starting to kill bombers");
             killBombers(bombers);

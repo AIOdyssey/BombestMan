@@ -235,7 +235,7 @@ public class Match implements Runnable {
                 }
             }
         } catch (FileNotFoundException ex) {
-            System.out.println("File not found");
+            System.out.println("DBG: File not found");
             throw new RuntimeException("cannot continue without map");
         } finally {
             if (read != null) {
@@ -257,7 +257,14 @@ public class Match implements Runnable {
         String result[] = new String[bombers.length];
         for (int i = 0; i < bombers.length; i++) {
             IBomber b = bombers[i];
-            result[i] = b.readFromBomberman().toString().replaceAll("\n", "  ");
+
+            try {
+                String red = b.readFromBomberman();
+                result[i] = red.replaceAll("\n", "  ");
+            } catch (NullPointerException e) {
+                System.out.println("DBG: read from bomberissa NPE" + e);
+                result[i] = "WAIT";
+            }
         }
         return result;
 

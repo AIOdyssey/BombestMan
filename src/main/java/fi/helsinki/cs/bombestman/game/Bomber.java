@@ -83,6 +83,7 @@ public class Bomber implements IBomber {
         } else if (number == 3) {
             tile = tiles[0][width - 1];
         } else {
+             System.out.println("DBG: cannot choose tile");
             throw new RuntimeException("Cannot have over 4 players");
         }
         tile.addBomber(this);
@@ -200,7 +201,7 @@ public class Bomber implements IBomber {
             writer = new PrintWriter(socket.getOutputStream(), true);
             reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         } catch (IOException ex) {
-            System.out.println("Cannot set socket");
+            System.out.println("DBG: Cannot set socket");
         }
     }
 }
